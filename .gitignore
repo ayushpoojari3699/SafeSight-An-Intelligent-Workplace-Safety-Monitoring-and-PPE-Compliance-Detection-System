@@ -1,0 +1,8 @@
+outputs/
+runs/
+data/
+uploads/
+node_modules/
+__pycache__/
+*.pyc
+*.pt
