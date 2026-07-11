@@ -13,5 +13,5 @@ timeout /t 2
 
 start http://localhost:5173
 
-echo PPE Sentinel Started Successfully!
+echo Safesight Started Successfully!
 pause

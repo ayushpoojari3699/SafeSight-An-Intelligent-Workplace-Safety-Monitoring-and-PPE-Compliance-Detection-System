@@ -1,23 +1,67 @@
-def check_violations(worker_data):
+# violation_checker.py
+
+def check_violations(workers):
+
     violations = []
 
-    for worker in worker_data:
-        if not worker["helmet"]:
-            violations.append(f"Worker {worker['worker_id']} missing helmet")
+    summary = {
+        "helmet": 0,
+        "vest": 0,
+        "gloves": 0,
+        "boots": 0,
+        "goggles": 0,
+        "safe_workers": 0,
+        "unsafe_workers": 0
+    }
 
-        if not worker["gloves"]:
-            violations.append(f"Worker {worker['worker_id']} missing gloves")
+    for worker in workers:
+
+        missing = []
+
+        if not worker["helmet"]:
+            missing.append("Helmet")
+            summary["helmet"] += 1
 
         if not worker["vest"]:
-            violations.append(f"Worker {worker['worker_id']} missing vest")
+            missing.append("Vest")
+            summary["vest"] += 1
+
+        if not worker["gloves"]:
+            missing.append("Gloves")
+            summary["gloves"] += 1
 
         if not worker["boots"]:
-            violations.append(f"Worker {worker['worker_id']} missing boots")
+            missing.append("Boots")
+            summary["boots"] += 1
 
         if not worker["goggles"]:
-            violations.append(f"Worker {worker['worker_id']} missing goggles")
+            missing.append("Goggles")
+            summary["goggles"] += 1
 
-    if not violations:
-        return ["No violations"]
+        if len(missing) == 0:
 
-    return violations
+            worker["status"] = "Safe"
+            worker["missing"] = []
+
+            summary["safe_workers"] += 1
+
+        else:
+
+            worker["status"] = "Unsafe"
+            worker["missing"] = missing
+
+            summary["unsafe_workers"] += 1
+
+            violations.append(
+                {
+                    "worker_id": worker["worker_id"],
+                    "missing": missing,
+                    "status": "Unsafe"
+                }
+            )
+
+    return {
+        "workers": workers,
+        "violations": violations,
+        "summary": summary
+    }
