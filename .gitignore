@@ -4,3 +4,17 @@ uploads/
 node_modules/
 __pycache__/
 *.pyc
+
+# API keys — never commit this
+.env
+outputs/
+videos/
+*.pkl
+*.index
+
+# Personal / internal files — keep off GitHub
+epfo.pdf
+Knowledge.docx
+SAFESIGHT_Internship_Completion_Report.*
+SafeSight_Simplified_Report.*
+reports/

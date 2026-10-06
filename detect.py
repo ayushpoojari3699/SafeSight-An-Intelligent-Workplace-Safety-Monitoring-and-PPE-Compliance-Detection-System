@@ -46,4 +46,14 @@ def detect_objects(image_path):
         verbose=False
     )
 
+    # ✅ DEBUG: Print detected objects
+    print("\n===== DETECTED OBJECTS =====")
+    print("Class Names:", results[0].names)
+    print("-" * 40)
+    for box in results[0].boxes:
+        cls = int(box.cls[0])
+        conf = float(box.conf[0])
+        print(f"  {cls}: {results[0].names[cls]} (conf: {conf:.2f})")
+    print("============================\n")
+
     return results

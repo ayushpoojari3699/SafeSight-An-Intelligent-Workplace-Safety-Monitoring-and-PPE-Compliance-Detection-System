@@ -1,4 +1,5 @@
 from database import detections, documents
+from violation_checker import compute_compliance_rate
 
 
 # ==========================================
@@ -91,7 +92,14 @@ Missing PPE: {missing_text}
             # ==========================================
             total_workers = len(workers)
             overall_status = "UNSAFE" if unsafe_workers > 0 else "SAFE"
-            compliance_rate = round((safe_workers / total_workers) * 100, 1) if total_workers > 0 else 100.0
+            # % of required PPE items actually present — the same formula used
+            # everywhere else in the app. This used to be safe_workers /
+            # total_workers, which for a single-worker image can only ever
+            # produce 0% or 100%: one worker missing just their goggles read
+            # as "0% compliant" despite wearing four of five items. That
+            # binary number then travelled into the FAISS index and out to
+            # the AI Assistant's report cards.
+            compliance_rate = compute_compliance_rate(workers)
             
             # ==========================================
             # Build Inspection Text
@@ -131,9 +139,11 @@ Overall inspection marked {overall_status}.
                 inspection_text += violation_summary
             
             # ==========================================
-            # Create ONE Document Per Image
+            # Create ONE Document Per Image with _id
             # ==========================================
             rag_documents.append({
+                "_id": str(record["_id"]),  # ✅ ADD THIS LINE - MongoDB ObjectId
+
                 "type": "inspection",
                 "status": "Unsafe" if unsafe_workers > 0 else "Safe",
                 "image": image_name,
@@ -143,6 +153,10 @@ Overall inspection marked {overall_status}.
                 "safe_workers": safe_workers,
                 "unsafe_workers": unsafe_workers,
                 "compliance_rate": compliance_rate,
+                # Carried through so anything reading this document later can
+                # recompute compliance itself rather than trusting whatever
+                # formula was in use when the index was last built.
+                "workers": workers,
                 "missing": list(violation_counts.keys()),
                 "text": inspection_text
             })
@@ -221,6 +235,7 @@ if __name__ == "__main__":
         print(f"Unsafe Workers: {sample_inspection['unsafe_workers']}")
         print(f"Compliance Rate: {sample_inspection['compliance_rate']}%")
         print(f"Missing PPE: {', '.join(sample_inspection['missing']) if sample_inspection['missing'] else 'None'}")
+        print(f"ID: {sample_inspection.get('_id', 'NO ID')}")  # ✅ Verify _id is present
         print("\nFull Text Preview:")
         print(sample_inspection['text'][:500] + "...")
         

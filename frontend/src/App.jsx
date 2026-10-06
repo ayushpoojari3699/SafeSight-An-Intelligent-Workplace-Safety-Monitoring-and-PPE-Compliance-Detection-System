@@ -1,50 +1,97 @@
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
+import AppShell from "./layouts/AppShell";
 import Dashboard from "./Dashboard";
 import AIAssistant from "./pages/AIAssistant";
+import Login from "./pages/Login";
+import ProtectedRoute from "./components/ProtectedRoute";
+
+import AdminUploadCenter from "./pages/admin/AdminUploadCenter";
+import AdminDocuments from "./pages/admin/AdminDocuments";
+import AdminDetections from "./pages/admin/AdminDetections";
+import AdminAnalytics from "./pages/admin/AdminAnalytics";
+import AdminSites from "./pages/admin/AdminSites";
+import AdminUsers from "./pages/admin/AdminUsers";
+import AdminSettings from "./pages/admin/AdminSettings";
 
 function App() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen">
+      <Routes>
+        <Route path="/login" element={<Login />} />
 
-        <nav className="bg-[#0b1120] border-b border-gray-800 text-white">
+        <Route
+          element={
+            <ProtectedRoute allowedRoles={["user", "admin"]}>
+              <AppShell />
+            </ProtectedRoute>
+          }
+        >
+          {/* Shared by both roles */}
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/assistant" element={<AIAssistant />} />
 
-          <div className="max-w-7xl mx-auto flex gap-8 px-8 py-4">
-
-            <Link
-              to="/"
-              className="hover:text-red-400 font-semibold"
-            >
-              Dashboard
-            </Link>
-
-            <Link
-              to="/assistant"
-              className="hover:text-red-400 font-semibold"
-            >
-              AI Assistant
-            </Link>
-
-          </div>
-
-        </nav>
-
-        <Routes>
-
+          {/* Admin-only workspace */}
           <Route
-            path="/"
-            element={<Dashboard />}
+            path="/admin/upload"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <AdminUploadCenter />
+              </ProtectedRoute>
+            }
           />
-
           <Route
-            path="/assistant"
-            element={<AIAssistant />}
+            path="/admin/documents"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <AdminDocuments />
+              </ProtectedRoute>
+            }
           />
+          <Route
+            path="/admin/detections"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <AdminDetections />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/analytics"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <AdminAnalytics />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/sites"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <AdminSites />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/users"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <AdminUsers />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/settings"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <AdminSettings />
+              </ProtectedRoute>
+            }
+          />
+        </Route>
 
-        </Routes>
-
-      </div>
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </BrowserRouter>
   );
 }

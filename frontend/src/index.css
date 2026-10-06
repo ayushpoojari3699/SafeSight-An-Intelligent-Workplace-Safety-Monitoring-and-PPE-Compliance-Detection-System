@@ -1,1 +1,189 @@
 @import "tailwindcss";
+
+@keyframes blob {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -40px) scale(1.12); }
+  66% { transform: translate(-24px, 24px) scale(0.94); }
+}
+
+.animate-blob {
+  animation: blob 14s infinite ease-in-out;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.animate-pulse-dot {
+  animation: pulseDot 1.6s infinite ease-in-out;
+}
+
+/* Live-arrival toasts slide in from the bottom-right corner. */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.28s ease-out;
+}
+
+/* ============================================================
+   Base sizing
+   ============================================================
+   Everything in the app is sized in rem via Tailwind, so raising the root
+   size scales type, padding, gaps and rounded corners together instead of
+   leaving large text crammed into unchanged boxes. 18px is a 12.5% bump
+   over the browser default; change this one number to dial readability up
+   or down.
+   ============================================================ */
+html {
+  font-size: 18px;
+}
+
+/* ============================================================
+   Light theme
+   ============================================================
+   The UI was written as dark-mode utilities scattered across 15 files:
+   white-alpha surfaces (bg-white/5), white-alpha borders, grey text ramps
+   and a few hardcoded near-black panel colours. Rather than rewrite every
+   className — hundreds of edits, every one a chance to miss something and
+   leave an unreadable patch — the palette is remapped here in one place by
+   redefining exactly those utilities.
+
+   This works because unlayered CSS beats Tailwind's layered utilities
+   regardless of source order, so no !important is needed. It also means the
+   whole theme is revertible by deleting this block, and any page added
+   later inherits it automatically as long as it uses the same utilities.
+
+   The trade-off: these class names now mean something other than what they
+   say — "bg-white/5" paints a light grey wash on a white card. That's the
+   cost of theming an app whose colours live in markup.
+   ============================================================ */
+
+body {
+  background-color: #f4f6fb;
+  color: #0f172a;
+}
+
+/* Page and panel backgrounds that were hardcoded near-black */
+.bg-\[\#050816\] { background-color: #f4f6fb; }
+.bg-\[\#08090d\] { background-color: #eef1f7; }
+.bg-\[\#0b1120\] { background-color: #ffffff; }
+.bg-\[\#111827\] { background-color: #ffffff; }
+
+/* Raised surfaces: white-on-dark washes become slate-on-light washes */
+.bg-white\/5 { background-color: rgba(15, 23, 42, 0.035); }
+.bg-white\/10 { background-color: rgba(15, 23, 42, 0.07); }
+.hover\:bg-white\/5:hover { background-color: rgba(15, 23, 42, 0.05); }
+.hover\:bg-white\/10:hover { background-color: rgba(15, 23, 42, 0.08); }
+.hover\:bg-white\/20:hover { background-color: rgba(15, 23, 42, 0.12); }
+
+/* Arbitrary-value variants of the same surfaces. Tailwind emits these as
+   distinct classes (bg-white/[0.03] is not bg-white/5), so they slipped
+   through the remap above and left the AI Assistant composer and the
+   topbar as dark islands on an otherwise light page. */
+.bg-white\/\[0\.02\] { background-color: rgba(15, 23, 42, 0.02); }
+.bg-white\/\[0\.03\] { background-color: rgba(15, 23, 42, 0.03); }
+.bg-white\/\[0\.04\] { background-color: rgba(15, 23, 42, 0.04); }
+.bg-white\/\[0\.06\] { background-color: rgba(15, 23, 42, 0.05); }
+.hover\:bg-white\/\[0\.07\]:hover { background-color: rgba(15, 23, 42, 0.06); }
+
+/* Semi-transparent panel colours (sticky topbar, composer bar, toasts) —
+   these sit over page content, so they stay near-opaque white. */
+.bg-\[\#0b1120\]\/80 { background-color: rgba(255, 255, 255, 0.85); }
+.bg-\[\#08090d\]\/90 { background-color: rgba(244, 246, 251, 0.92); }
+.bg-\[\#111827\]\/95 { background-color: rgba(255, 255, 255, 0.96); }
+
+/* Borders and dividers */
+.border-white\/5 { border-color: rgba(15, 23, 42, 0.06); }
+.border-white\/10 { border-color: rgba(15, 23, 42, 0.10); }
+.border-white\/20 { border-color: rgba(15, 23, 42, 0.16); }
+.divide-white\/5 > :not([hidden]) ~ :not([hidden]) { border-color: rgba(15, 23, 42, 0.07); }
+.border-gray-800 { border-color: #e2e8f0; }
+.border-gray-700 { border-color: #d8dee9; }
+.border-gray-600 { border-color: #cbd5e1; }
+.border-gray-400 { border-color: #94a3b8; }
+
+/* Text ramp, inverted: near-white headings become near-black, and the
+   muted greys stay muted rather than flipping to near-invisible. */
+.text-white { color: #0f172a; }
+.text-gray-100 { color: #0f172a; }
+.text-gray-200 { color: #1e293b; }
+.text-gray-300 { color: #334155; }
+.text-gray-400 { color: #475569; }
+.text-gray-500 { color: #64748b; }
+.text-gray-600 { color: #94a3b8; }
+
+/* Accent text sits on white now, so the 400-weight shades that read well
+   on near-black are too pale. Darken them to keep contrast. */
+.text-red-400 { color: #dc2626; }
+.text-red-300 { color: #b91c1c; }
+.text-green-400 { color: #15803d; }
+.text-emerald-400 { color: #047857; }
+.text-yellow-400 { color: #a16207; }
+.text-orange-400 { color: #c2410c; }
+.text-blue-400 { color: #1d4ed8; }
+.text-purple-400 { color: #7e22ce; }
+
+/* Solid brand-coloured buttons keep white text. The descendant selectors
+   are deliberate: a child carrying its own .text-white would otherwise pick
+   up the dark override above and disappear into the red. */
+.bg-red-500,
+.bg-red-600,
+.bg-green-500,
+.bg-emerald-500,
+.bg-blue-500,
+.bg-yellow-500,
+.bg-red-500 .text-white,
+.bg-red-600 .text-white,
+.bg-red-500.text-white,
+.bg-red-600.text-white {
+  color: #ffffff;
+}
+
+/* Modal/drawer scrim: pure black at 60% is heavy against a light page */
+.bg-black\/60 { background-color: rgba(15, 23, 42, 0.35); }
+
+/* Letterbox behind detection images — these are photos of a site, so the
+   well should recede rather than punch a black hole in a white page. */
+.bg-black { background-color: #eef1f7; }
+
+/* Native controls (selects, date inputs, scrollbars) still render their
+   dark-mode chrome unless the page declares its colour scheme. */
+:root {
+  color-scheme: light;
+}
+
+/* Inputs inherit the page text colour; without this, placeholder-coloured
+   text on a now-white field is unreadable. */
+input,
+select,
+textarea {
+  color: #0f172a;
+}
+
+input::placeholder,
+textarea::placeholder,
+.placeholder\:text-gray-500::placeholder,
+.placeholder\:text-gray-600::placeholder {
+  color: #94a3b8;
+}

@@ -1,0 +1,47 @@
+{
+ "train": {
+  "images": 1132,
+  "label_files": 1132,
+  "per_class": {
+   "helmet": 1341,
+   "gloves": 1146,
+   "vest": 1269,
+   "boots": 1235,
+   "goggles": 419,
+   "person": 2421
+  },
+  "in_range_boxes": 7831,
+  "out_of_range_boxes": 1267,
+  "files_with_out_of_range": 240
+ },
+ "val": {
+  "images": 143,
+  "label_files": 143,
+  "per_class": {
+   "helmet": 201,
+   "gloves": 136,
+   "vest": 171,
+   "boots": 151,
+   "goggles": 47,
+   "person": 320
+  },
+  "in_range_boxes": 1026,
+  "out_of_range_boxes": 146,
+  "files_with_out_of_range": 28
+ },
+ "test": {
+  "images": 141,
+  "label_files": 141,
+  "per_class": {
+   "helmet": 192,
+   "gloves": 163,
+   "vest": 178,
+   "boots": 211,
+   "goggles": 52,
+   "person": 301
+  },
+  "in_range_boxes": 1097,
+  "out_of_range_boxes": 154,
+  "files_with_out_of_range": 26
+ }
+}
